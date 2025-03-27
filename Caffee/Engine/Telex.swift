@@ -43,7 +43,13 @@ class Telex: TypingMethod {
           word.push(letter: char)
           return false
         }
+      } else {
+        word.push(letter: char)
+        return false
       }
+    } else {
+      word.push(letter: char)
+      return false
     }
 
     if !(word.thanhPhanTieng.nguyenAm.isEmpty) {

@@ -29,29 +29,6 @@ class Telex: TypingMethod {
   public func push(char: Character, to word: TiengViet) -> Bool {
     var daDatDau = false
 
-    if !word.thanhPhanTieng.conLai.isEmpty {
-      word.push(letter: char)
-      return false
-    }
-
-    if let chuCaiDau = word.chuKhongDau.first {
-      if (char == "d" || char == "D") {
-        if (chuCaiDau == "d" || chuCaiDau == "D") && !word.gachD {
-          word.datGachD()
-          daDatDau = true
-        } else {
-          word.push(letter: char)
-          return false
-        }
-      } else {
-        word.push(letter: char)
-        return false
-      }
-    } else {
-      word.push(letter: char)
-      return false
-    }
-
     if !(word.thanhPhanTieng.nguyenAm.isEmpty) {
       daDatDau = true
       switch char {
@@ -88,11 +65,30 @@ class Telex: TypingMethod {
       }
     }
 
-    if !daDatDau {
-      word.push(letter: char)
+    // If diacritic was handled, return early
+    if daDatDau {
+      return true
     }
 
-    return daDatDau
+    // Handle remaining characters
+    if !word.thanhPhanTieng.conLai.isEmpty {
+      word.push(letter: char)
+      return false
+    }
+
+    // Handle special case for 'd' and 'đ'
+    if let chuCaiDau = word.chuKhongDau.first {
+      if char == "d" || char == "D" {
+        if (chuCaiDau == "d" || chuCaiDau == "D") && !word.gachD {
+          word.datGachD()
+          return true
+        }
+      }
+    }
+
+    // Push the character if no special handling was done
+    word.push(letter: char)
+    return false
   }
 
   public func pop(from word: TiengViet) -> Character? {

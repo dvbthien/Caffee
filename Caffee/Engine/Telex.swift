@@ -30,13 +30,23 @@ class Telex: TypingMethod {
     var daDatDau = false
 
     if !word.thanhPhanTieng.conLai.isEmpty {
+      word.push(letter: char)
+      return false
+    }
 
-    } else if let chuCaiDau = word.chuKhongDau.first,
-      (char == "d" || char == "D") && (chuCaiDau == "d" || chuCaiDau == "D")
-    {
-      word.datGachD()
-      daDatDau = true
-    } else if !(word.thanhPhanTieng.nguyenAm.isEmpty) {
+    if let chuCaiDau = word.chuKhongDau.first {
+      if (char == "d" || char == "D") {
+        if (chuCaiDau == "d" || chuCaiDau == "D") && !word.gachD {
+          word.datGachD()
+          daDatDau = true
+        } else {
+          word.push(letter: char)
+          return false
+        }
+      }
+    }
+
+    if !(word.thanhPhanTieng.nguyenAm.isEmpty) {
       daDatDau = true
       switch char {
       case "s", "S":

@@ -199,6 +199,10 @@ class TiengViet {
 
   public func pop() -> Character? {
     let popped = chuKhongDau.popLast()
+      if popped != nil {
+      // Reset gachD state when popping characters
+      gachD = false
+    }
     parse()
     return popped
   }
